@@ -1,0 +1,15 @@
+Paketler ve Açıklamaları
+
+1-express.js
+Server'imizi bu paket ile oluşturacağız. Bu uygulama sayesinde server'imiz ayakta kalcak.
+
+2-cors
+
+3-mongoose
+MongoDB ile iletişim kurmamızı sağlar.
+
+4-dotenv
+Bu paket ile birlikte ortam değişkenlerini tutabileceğiz. Mesela DB'ye bağlanmamız için gereken connectionString gibi hassas bilgileri tutacağımız yer.
+
+5-nodemon
+Bu paket her kod değişikliğinde projeyi tekrar ayağa kaldırma ihtiyacını ortadan kaldırır.
