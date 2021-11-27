@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import * as api from "../axios/index.js";
+import { useDispatch } from "react-redux";
+import { createMemory } from "../actions/memoryActions";
 import ReactFileBase64 from "react-file-base64";
 import { Button, Form } from "react-bootstrap";
 
 const SubmitMemory = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [memoryData, setMemoryData] = useState({
     title: "",
@@ -19,7 +21,7 @@ const SubmitMemory = () => {
       <Form
         onSubmit={(e) => {
           e.preventDefault();
-          api.createMemory(memoryData);
+          dispatch(createMemory(memoryData));
           history.push("/");
         }}
       >

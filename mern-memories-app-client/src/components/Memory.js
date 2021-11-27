@@ -1,11 +1,14 @@
 import React from "react";
 import moment from "moment";
-import { deleteMemory } from "../axios";
+import { deleteMemory } from "../actions/memoryActions";
+import { useDispatch } from "react-redux";
 import { Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 
 const Memory = ({ memory }) => {
+  const dispatch = useDispatch();
+
   return (
     <Card className="rounded py-3 my-3">
       <Card.Img variant="top" src={memory.image} />
@@ -35,7 +38,7 @@ const Memory = ({ memory }) => {
           color="red"
           style={{ cursor: "pointer" }}
           onClick={() => {
-            deleteMemory(memory._id);
+            dispatch(deleteMemory(memory._id));
           }}
         ></MdDelete>
       </Card.Footer>
