@@ -1,9 +1,25 @@
 import React, { useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../actions/usersActions";
+import Message from "../components/Message";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-const AuthScreen = () => {
+const AuthScreen = ({ history }) => {
+  const initialFormData = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const userState = useSelector((state) => state.user);
+  const { error } = userState;
+
+  const [form, setForm] = useState(initialFormData);
   const [login, setLogin] = useState(true);
+  const dispatch = useDispatch();
+
   return (
     <Container>
       <Row className="justify-content-center">
@@ -16,6 +32,7 @@ const AuthScreen = () => {
                 <Form.Control
                   type="email"
                   placeholder="Email adresinizi girin"
+                  // onChange={(e) => setForm({ ...form, email: e.target.value })}
                 ></Form.Control>
               </Form.Group>
               <Form.Group>
@@ -23,6 +40,9 @@ const AuthScreen = () => {
                 <Form.Control
                   type="password"
                   placeholder="Şifrenizi girin"
+                  // onChange={(e) =>
+                  //   setForm({ ...form, password: e.target.value })
+                  // }
                 ></Form.Control>
               </Form.Group>
               <Button
@@ -45,20 +65,35 @@ const AuthScreen = () => {
               </Form.Text>
             </Form>
           ) : (
-            <Form className="align-content-center mt-3">
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!login) {
+                  dispatch(signup(form, history));
+                }
+              }}
+              className="align-content-center mt-3"
+            >
               <h1>Kayıt Ol</h1>
+              {error && <Message>{error}</Message>}
               <Form.Group style={{ display: "flex" }}>
                 <Form.Control
                   className="mr-2"
                   style={{ marginRight: "2px" }}
                   type="text"
                   placeholder="İlk adınız"
+                  onChange={(e) =>
+                    setForm({ ...form, firstName: e.target.value })
+                  }
                 ></Form.Control>
                 <Form.Control
                   className="ml-2"
                   style={{ marginLeft: "2px" }}
                   type="text"
                   placeholder="Soy adınız"
+                  onChange={(e) =>
+                    setForm({ ...form, lastName: e.target.value })
+                  }
                 ></Form.Control>
               </Form.Group>
               <Form.Group>
@@ -66,6 +101,7 @@ const AuthScreen = () => {
                 <Form.Control
                   type="email"
                   placeholder="Email adresinizi girin"
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 ></Form.Control>
               </Form.Group>
               <Form.Group>
@@ -73,6 +109,9 @@ const AuthScreen = () => {
                 <Form.Control
                   type="password"
                   placeholder="Şifrenizi girin"
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
                 ></Form.Control>
               </Form.Group>
               <Form.Group>
@@ -80,6 +119,9 @@ const AuthScreen = () => {
                 <Form.Control
                   type="password"
                   placeholder="Şifrenizi doğrulayın"
+                  onChange={(e) =>
+                    setForm({ ...form, confirmPassword: e.target.value })
+                  }
                 ></Form.Control>
               </Form.Group>
               <Button

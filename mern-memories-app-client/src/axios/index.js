@@ -15,3 +15,6 @@ export const updateMemory = async (id, updatedMemory) => {
 };
 
 export const deleteMemory = async (id) => API.delete(`/memories/${id}`);
+
+export const signup = async (formData) =>
+  await API.post("/users/signup", formData);

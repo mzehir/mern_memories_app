@@ -8,9 +8,11 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import memoriesReducer from "./reducers/memoriesReducer";
+import usersReducer from "./reducers/usersReducer";
 
 const reducer = combineReducers({
   memories: memoriesReducer,
+  user: usersReducer,
 });
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 
