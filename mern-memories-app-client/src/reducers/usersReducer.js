@@ -1,4 +1,9 @@
-import { AUTH, SIGNUP_FAIL } from "../constants/actionsConstants";
+import {
+  AUTH,
+  SIGNUP_FAIL,
+  LOGOUT,
+  LOGOUT_FAILED,
+} from "../constants/actionsConstants";
 
 export default (state = { userData: null }, action) => {
   switch (action.type) {
@@ -7,6 +12,13 @@ export default (state = { userData: null }, action) => {
       return { ...state, userData: action.payload };
 
     case SIGNUP_FAIL:
+      return { error: action.payload };
+
+    case LOGOUT:
+      localStorage.removeItem("user");
+      return { ...state, useData: null };
+
+    case LOGOUT_FAILED:
       return { error: action.payload };
 
     default:

@@ -1,7 +1,7 @@
 import axios from "axios";
 const API = axios.create({ baseURL: "http://localhost:5000" });
 
-//! Fonksiyonlar
+//! -----------------------------------------------
 export const createMemory = async (newMemory) => {
   return await API.post("/memories", newMemory);
 };
@@ -14,7 +14,9 @@ export const updateMemory = async (id, updatedMemory) => {
   return await API.put(`/memories/${id}`, updatedMemory);
 };
 
-export const deleteMemory = async (id) => API.delete(`/memories/${id}`);
+export const deleteMemory = async (id) => await API.delete(`/memories/${id}`);
 
 export const signup = async (formData) =>
   await API.post("/users/signup", formData);
+
+export const logOut = async (id) => await API.get(`/users/logout/${id}`);
