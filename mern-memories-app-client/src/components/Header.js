@@ -10,6 +10,9 @@ import {
 
 import { LinkContainer } from "react-router-bootstrap";
 
+import { FcEditImage } from "react-icons/fc";
+import { AiOutlineLogin } from "react-icons/ai";
+
 const Header = () => {
   return (
     <header>
@@ -23,7 +26,17 @@ const Header = () => {
           <Nav>
             <LinkContainer to="/create">
               <Nav.Link>
-                <Button variant="outline-info">Bir anı paylaş</Button>
+                <Button variant="outline-info">
+                  <FcEditImage className="mr-2" size={20} /> Bir anı paylaş
+                </Button>
+              </Nav.Link>
+            </LinkContainer>
+
+            <LinkContainer to="/auth">
+              <Nav.Link>
+                <Button variant="outline-light">
+                  <AiOutlineLogin className="mr-2" size={20} /> Giriş Yap
+                </Button>
               </Nav.Link>
             </LinkContainer>
           </Nav>
