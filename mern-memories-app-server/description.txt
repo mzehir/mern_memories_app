@@ -13,3 +13,9 @@ Bu paket ile birlikte ortam değişkenlerini tutabileceğiz. Mesela DB'ye bağla
 
 5-nodemon
 Bu paket her kod değişikliğinde projeyi tekrar ayağa kaldırma ihtiyacını ortadan kaldırır.
+
+6-bcryptjs
+..........
+
+7-jsonwebtoken
+..........
