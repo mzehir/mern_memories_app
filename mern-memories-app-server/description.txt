@@ -15,7 +15,7 @@ Bu paket ile birlikte ortam değişkenlerini tutabileceğiz. Mesela DB'ye bağla
 Bu paket her kod değişikliğinde projeyi tekrar ayağa kaldırma ihtiyacını ortadan kaldırır.
 
 6-bcryptjs
-..........
+Bu paket ile kullanıcı parola'ları şifrelenerek kullanılır.
 
 7-jsonwebtoken
-..........
+Bu oaket 3 ana parçadan oluşmuş token sağlayıcısıdır.
