@@ -1,6 +1,7 @@
 import {
   AUTH,
   SIGNUP_FAIL,
+  SIGNIN_FAIL,
   LOGOUT,
   LOGOUT_FAILED,
 } from "../constants/actionsConstants";
@@ -14,9 +15,12 @@ export default (state = { userData: null }, action) => {
     case SIGNUP_FAIL:
       return { error: action.payload };
 
+    case SIGNIN_FAIL:
+      return { error: action.payload };
+
     case LOGOUT:
       localStorage.removeItem("user");
-      return { ...state, useData: null };
+      return { ...state, userData: null };
 
     case LOGOUT_FAILED:
       return { error: action.payload };

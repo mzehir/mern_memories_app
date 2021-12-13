@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signup } from "../actions/usersActions";
+import { signup, signin } from "../actions/usersActions";
 import Message from "../components/Message";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
@@ -25,14 +25,23 @@ const AuthScreen = ({ history }) => {
       <Row className="justify-content-center">
         <Col xs={12} md={6}>
           {login ? (
-            <Form className="align-content-center mt-3">
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (login) {
+                  dispatch(signin(form, history));
+                }
+              }}
+              className="align-content-center mt-3"
+            >
               <h1>Giriş Yap</h1>
+              {error && <Message>{error}</Message>}
               <Form.Group>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Email adresinizi girin"
-                  // onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 ></Form.Control>
               </Form.Group>
               <Form.Group>
@@ -40,9 +49,9 @@ const AuthScreen = ({ history }) => {
                 <Form.Control
                   type="password"
                   placeholder="Şifrenizi girin"
-                  // onChange={(e) =>
-                  //   setForm({ ...form, password: e.target.value })
-                  // }
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
                 ></Form.Control>
               </Form.Group>
               <Button
