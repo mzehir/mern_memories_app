@@ -6,7 +6,7 @@ import { FcEditImage } from "react-icons/fc";
 import { AiOutlineLogin } from "react-icons/ai";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { logout } from "../actions/usersActions";
-
+import decode from "jwt-decode";
 import {
   Form,
   FormControl,
@@ -31,6 +31,15 @@ const Header = () => {
   useEffect(() => {
     if (localStorage.getItem("user") && !user) {
       setUser(JSON.parse(localStorage.getItem("user")));
+    }
+
+    const accessToken = user?.accessToken;
+    if (accessToken) {
+      const decodeAccessToken = decode(accessToken);
+      if (decodeAccessToken.exp * 1000 < new Date().getTime()) {
+        console.log("Token süresi doldu...");
+        exit(user.user._id);
+      }
     }
   }, [location, user]);
 
