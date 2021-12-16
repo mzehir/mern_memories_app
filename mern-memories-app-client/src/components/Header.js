@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getRefreshToken } from "../axios";
 import { useDispatch } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -21,11 +22,17 @@ const Header = () => {
   const history = useHistory();
   const location = useLocation();
   const [user, setUser] = useState();
+  const [refreshToken, setRefreshToken] = useState("");
 
   const exit = async (id) => {
     await dispatch(logout(id));
     setUser(null);
     history.push("/");
+  };
+
+  const getToken = async (id) => {
+    const data = await getRefreshToken(id);
+    setRefreshToken(data?.refreshToken);
   };
 
   useEffect(() => {
@@ -40,6 +47,10 @@ const Header = () => {
         console.log("Token süresi doldu...");
         exit(user.user._id);
       }
+    }
+
+    if (user) {
+      getToken(user.user._id);
     }
   }, [location, user]);
 
