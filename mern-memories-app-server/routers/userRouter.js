@@ -33,7 +33,7 @@ router.post("/signup", async (req, res) => {
       { email: user.email, id: user._id },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "3m",
+        expiresIn: "10s",
       }
     );
 
@@ -110,14 +110,24 @@ router.get("/logout/:id", async (req, res) => {
   }
 });
 
-//! Refresh Tokeni Client'e Gönderme
-router.get("/getToken/:id", async (req, res) => {
+//!Access Tokeni Yenileme
+router.get("/refresh/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { refreshToken } = await tokenModel.findOne({ userId: id });
     if (!refreshToken) return res.status(401);
 
-    res.status(200).json({ refreshToken });
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, x) => {
+      if (err) return res.status(403).json(err);
+
+      const accessToken = jwt.sign(
+        { email: x.email, id: x.id },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "10s" }
+      );
+
+      res.status(200).json(accessToken);
+    });
   } catch (error) {
     console.log(error.message);
   }

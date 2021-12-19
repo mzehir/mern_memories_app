@@ -4,6 +4,8 @@ import {
   SIGNIN_FAIL,
   LOGOUT,
   LOGOUT_FAILED,
+  REFRESH_ACCESS_TOKEN_SUCCESS,
+  REFRESH_ACCESS_TOKEN_FAİLED,
 } from "../constants/actionsConstants";
 import * as api from "../axios";
 
@@ -47,6 +49,22 @@ export const logout = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOGOUT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAccessToken = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.refreshAccessToken(id);
+
+    dispatch({ type: REFRESH_ACCESS_TOKEN_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: REFRESH_ACCESS_TOKEN_FAİLED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

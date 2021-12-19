@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getRefreshToken } from "../axios";
 import { useDispatch } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { FcEditImage } from "react-icons/fc";
 import { AiOutlineLogin } from "react-icons/ai";
 import { RiLogoutCircleLine } from "react-icons/ri";
-import { logout } from "../actions/usersActions";
+import { logout, getAccessToken } from "../actions/usersActions";
 import decode from "jwt-decode";
 import {
   Form,
@@ -22,7 +21,6 @@ const Header = () => {
   const history = useHistory();
   const location = useLocation();
   const [user, setUser] = useState();
-  const [refreshToken, setRefreshToken] = useState("");
 
   const exit = async (id) => {
     await dispatch(logout(id));
@@ -30,9 +28,9 @@ const Header = () => {
     history.push("/");
   };
 
-  const getToken = async (id) => {
-    const data = await getRefreshToken(id);
-    setRefreshToken(data?.refreshToken);
+  const renewAccessToken = async (id) => {
+    await dispatch(getAccessToken(id));
+    setUser(JSON.parse(localStorage.getItem("user")));
   };
 
   useEffect(() => {
@@ -40,18 +38,20 @@ const Header = () => {
       setUser(JSON.parse(localStorage.getItem("user")));
     }
 
-    const accessToken = user?.accessToken;
-    if (accessToken) {
-      const decodeAccessToken = decode(accessToken);
-      if (decodeAccessToken.exp * 1000 < new Date().getTime()) {
-        console.log("Token süresi doldu...");
-        exit(user.user._id);
+    const interval = setInterval(() => {
+      const accessToken = user?.accessToken;
+      if (accessToken) {
+        const decodeAccessToken = decode(accessToken);
+        if (decodeAccessToken.exp * 1000 < new Date().getTime()) {
+          console.log(decodeAccessToken.exp);
+          renewAccessToken(user.user._id);
+        }
       }
-    }
+    }, 5000);
 
-    if (user) {
-      getToken(user.user._id);
-    }
+    return () => {
+      clearInterval(interval);
+    };
   }, [location, user]);
 
   return (

@@ -4,6 +4,8 @@ import {
   SIGNIN_FAIL,
   LOGOUT,
   LOGOUT_FAILED,
+  REFRESH_ACCESS_TOKEN_SUCCESS,
+  REFRESH_ACCESS_TOKEN_FAİLED,
 } from "../constants/actionsConstants";
 
 export default (state = { userData: null }, action) => {
@@ -23,6 +25,14 @@ export default (state = { userData: null }, action) => {
       return { ...state, userData: null };
 
     case LOGOUT_FAILED:
+      return { error: action.payload };
+
+    case REFRESH_ACCESS_TOKEN_SUCCESS:
+      const data = { user: state.userData.user, accessToken: action.payload };
+      localStorage.setItem("user", JSON.stringify(data));
+      return { ...state, userData: data };
+
+    case REFRESH_ACCESS_TOKEN_FAİLED:
       return { error: action.payload };
 
     default:
