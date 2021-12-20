@@ -47,6 +47,11 @@ router.post("/signup", async (req, res) => {
       refreshToken: refreshToken,
     });
 
+    res.cookie("token", refreshToken, {
+      httpOnly: true, //! Böylece frontend'de bu cookie'ye ulaşamıyacağız
+      // secure: true, //! Sadece https üzerinden işlem yapabilir demek fakat bu işlem deploy aşamasından sonra kullanılır.
+      sameSite: "strict", //! Üçüncü parti yazılım tarafından yapılan istek sonucunda bulunduğumuz response'de cookie'mizi göndermemiş olacağız. Yani cors'da(index.js sayfasında) origin değerine verilen url'den gelen isteklere cookie'yi göndermiş olacağız.
+    });
     res.status(200).json({ user, accessToken });
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -87,6 +92,11 @@ router.post("/signin", async (req, res) => {
       { new: true }
     );
 
+    res.cookie("token", refreshToken, {
+      httpOnly: true, //! Böylece frontend'de bu cookie'ye ulaşamıyacağız
+      // secure: true, //! Sadece https üzerinden işlem yapabilir demek fakat bu işlem deploy aşamasından sonra kullanılır.
+      sameSite: "strict", //! Üçüncü parti yazılım tarafından yapılan istek sonucunda bulunduğumuz response'de cookie'mizi göndermemiş olacağız. Yani cors'da(index.js sayfasında) origin değerine verilen url'den gelen isteklere cookie'yi göndermiş olacağız.
+    });
     res.status(200).json({ user, accessToken });
   } catch (error) {
     console.log(error);
@@ -98,6 +108,8 @@ router.post("/signin", async (req, res) => {
 router.get("/logout/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    res.clearCookie("token");
     await tokenModel.findOneAndUpdate(
       { userId: id },
       { refreshToken: null },
@@ -116,6 +128,11 @@ router.get("/refresh/:id", async (req, res) => {
     const { id } = req.params;
     const { refreshToken } = await tokenModel.findOne({ userId: id });
     if (!refreshToken) return res.status(401);
+
+    const cookie = req.cookies.token;
+    if (!cookie) res.sendStatus(403);
+
+    if (cookie !== refreshToken) res.sendStatus(401);
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, x) => {
       if (err) return res.status(403).json(err);

@@ -1,5 +1,8 @@
 import axios from "axios";
-const API = axios.create({ baseURL: "http://localhost:5000" });
+const API = axios.create({
+  baseURL: "http://localhost:5000",
+  withCredentials: true, //! cookie'lerle istek yapabilmek için bu değeri veriyoruz. Artık yapılan isteğin header kısmında withCredentials değerinden ötürü httponlyCookie server'a gönderilmiş olacak. cookie'yi göndermek  için ekstra bir işlem yapmaya gerek yok.
+});
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("user")) {
