@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import moment from "moment";
 import { deleteMemory } from "../actions/memoryActions";
 import { useDispatch } from "react-redux";
@@ -7,7 +8,14 @@ import { LinkContainer } from "react-router-bootstrap";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 
 const Memory = ({ memory }) => {
+  const [user, setuser] = useState();
+  const userState = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    setuser(userData);
+  }, [userState]);
 
   return (
     <Card className="rounded py-3 my-3">
@@ -23,25 +31,27 @@ const Memory = ({ memory }) => {
           {moment(memory.createdAt).fromNow}
         </Card.Subtitle>
       </Card.Body>
-      <Card.Footer
-        style={{ display: "flex", justifyContent: "space-between" }}
-        className="bg-white pb-0"
-      >
-        <LinkContainer
-          to={`/update/${memory._id}`}
-          style={{ cursor: "pointer" }}
+      {user?.user?._id === memory.creatorId ? (
+        <Card.Footer
+          style={{ display: "flex", justifyContent: "space-between" }}
+          className="bg-white pb-0"
         >
-          <MdModeEdit size={25} color="blue"></MdModeEdit>
-        </LinkContainer>
-        <MdDelete
-          size={25}
-          color="red"
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            dispatch(deleteMemory(memory._id));
-          }}
-        ></MdDelete>
-      </Card.Footer>
+          <LinkContainer
+            to={`/update/${memory._id}`}
+            style={{ cursor: "pointer" }}
+          >
+            <MdModeEdit size={25} color="blue"></MdModeEdit>
+          </LinkContainer>
+          <MdDelete
+            size={25}
+            color="red"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              dispatch(deleteMemory(memory._id));
+            }}
+          ></MdDelete>
+        </Card.Footer>
+      ) : null}
     </Card>
   );
 };
