@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { signup, signin } from "../actions/usersActions";
 import Message from "../components/Message";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { GoogleLogin } from "react-google-login";
+import { FcGoogle } from "react-icons/fc";
 
 const AuthScreen = ({ history }) => {
   const initialFormData = {
@@ -19,6 +21,24 @@ const AuthScreen = ({ history }) => {
   const [form, setForm] = useState(initialFormData);
   const [login, setLogin] = useState(true);
   const dispatch = useDispatch();
+
+  const googleSuccess = (res) => {
+    console.log(res);
+    const user = res?.profileObj;
+    const accessToken = res?.tokenId;
+    const googleLogin = "google";
+
+    try {
+      dispatch({ type: "AUTH", payload: { user, accessToken, googleLogin } });
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleFailure = (err) => {
+    console.log(err);
+  };
 
   return (
     <Container>
@@ -61,17 +81,40 @@ const AuthScreen = ({ history }) => {
                 Giriş Yap
               </Button>
 
-              <Form.Text as="large" className="text-center mt-2">
-                Henüz bir hesabın yok mu?{" "}
-                <span
-                  style={{ fontWeight: "bold", cursor: "pointer" }}
-                  onClick={() => {
-                    setLogin(!login);
-                  }}
-                >
-                  Hesap Oluştur
-                </span>
-              </Form.Text>
+              <GoogleLogin
+                clientId="1092476735914-t0fbtghotqpek1in1mbuuqhs7jemv95p.apps.googleusercontent.com"
+                onSuccess={googleSuccess}
+                onFailure={googleFailure}
+                render={(renderProps) => (
+                  <Button
+                    style={{ width: "100%", marginTop: "10px" }}
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    variant="info"
+                  >
+                    <FcGoogle
+                      size={22}
+                      className="text-center"
+                      style={{ marginRight: "2px" }}
+                    />
+                    Google hesabınız ile giriş yapın
+                  </Button>
+                )}
+              />
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Form.Text as="large" className="text-center mt-2">
+                  Henüz bir hesabın yok mu?{" "}
+                  <span
+                    style={{ fontWeight: "bold", cursor: "pointer" }}
+                    onClick={() => {
+                      setLogin(!login);
+                    }}
+                  >
+                    Hesap Oluştur
+                  </span>
+                </Form.Text>
+              </div>
             </Form>
           ) : (
             <Form
